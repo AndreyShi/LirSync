@@ -1,7 +1,4 @@
-#include <iostream>
+﻿
+#include "CLirSync.h"
 
-
-int main() {
-	std::cout << "hello";
-	return 0;
-}
+CLirSync theApp;	// запуск приложения
