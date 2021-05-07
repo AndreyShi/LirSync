@@ -16,12 +16,12 @@
 
 class CEeprom {
 private:
-	LPTSTR file_path;
+	CString file_path;
 	void read(uint32_t address,int sz, void* buf);
 	void write(uint32_t address, int sz, void* buf);
 public:	
-	void load(LPTSTR file_path);
-	void save(LPTSTR file_path);
+	void load(const CString& _file_path);
+	void save(const CString& _file_path);
 
 	struct _AXIS_CFG {
 		//02.03.2018 sum of these fields must be 32 (4 bytes) (29.03.2018)+8=12	

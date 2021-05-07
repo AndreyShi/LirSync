@@ -1,7 +1,13 @@
 ﻿
 #pragma once
+//==Visual Styles
+#pragma comment(linker,"\"/manifestdependency:type='win32' \
+name='Microsoft.Windows.Common-Controls' version='6.0.0.0' \
+processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
+//==
 #include "afxwin.h" // MFC Основные и стандартные компоненты
 #include "afxcmn.h"
+#include "afxdlgs.h"
 #include <stdint.h>
 #include <fstream>
 #include "resource.h"
@@ -32,22 +38,28 @@ protected:
 	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
 	virtual void OnCancel();
 private:
-	CStatic* txt;
-	CTabCtrl* tab;
-	CEditorWnd* ewnd;
+	CTabCtrl tab;
+	CEditorWnd* EWindow;
 };
 
 class CEditorWnd : public CDialog {
 public:
 	CEditorWnd(CWnd* parent);
 	~CEditorWnd();
+
+	afx_msg void OnClickedOpen();	
+	afx_msg void OnClickedTree(NMHDR* pNMHDR, LRESULT* pResult);
+	afx_msg void OnClickedList(NMHDR* pNMHDR, LRESULT* pResult);
 protected:
 	DECLARE_MESSAGE_MAP();
 	virtual void OnCancel();
 private:
-	CTreeCtrl* tree;
-	CLinkCtrl* list;
-	CEeprom* ep;
+	CTreeCtrl tree;
+	CListCtrl list;
+	CEeprom data;
+
+	void InitTree();
+	void InitList();
 };
 
 

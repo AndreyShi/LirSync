@@ -28,7 +28,7 @@ void CEeprom::write(uint32_t address,  int sz, void* buf)
 	file.close(); 
 }
 
-void CEeprom::load(LPTSTR _file_path)
+void CEeprom::load(const CString& _file_path)
 {
 	file_path = _file_path;
 	//next
@@ -69,7 +69,7 @@ void CEeprom::load(LPTSTR _file_path)
 	// 20следующие c 1745
 }
 
-void CEeprom::save(LPTSTR _file_path)
+void CEeprom::save(const CString& _file_path)
 {
 	file_path = _file_path;
 	//next
