@@ -1,8 +1,11 @@
-﻿#pragma once
-
+﻿
+#pragma once
 #include "afxwin.h" // MFC Основные и стандартные компоненты
 #include "afxcmn.h"
+#include <stdint.h>
+#include <fstream>
 #include "resource.h"
+#include "CEeprom.h"
 
 class CLirSync;
 class CMainWnd;
@@ -44,7 +47,9 @@ protected:
 private:
 	CTreeCtrl* tree;
 	CLinkCtrl* list;
+	CEeprom* ep;
 };
+
 
 
 

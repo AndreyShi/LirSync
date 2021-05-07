@@ -18,12 +18,18 @@
     <ClCompile Include="CLirSync.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
+    <ClCompile Include="CEeprom.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CLirSync.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="resource.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="CEeprom.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>

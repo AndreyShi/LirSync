@@ -141,9 +141,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CEeprom.cpp" />
     <ClCompile Include="CLirSync.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CEeprom.h" />
     <ClInclude Include="CLirSync.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>

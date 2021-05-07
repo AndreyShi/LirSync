@@ -36,8 +36,8 @@ CMainWnd::CMainWnd() {
 CMainWnd::CMainWnd(LPCTSTR WndName, int x, int y) {
 
 	//Create(NULL, WndName, WS_OVERLAPPEDWINDOW,CRect(x,y,x + 320,y + 300), NULL, NULL);	// Создать окно программы
-	txt = new CStatic();
-	txt->Create(L"Текст", WS_CHILD | WS_VISIBLE, CRect(20, 20, 100, 40), this);
+	this->txt = new CStatic();
+	this->txt->Create(L"Текст", WS_CHILD | WS_VISIBLE, CRect(20, 20, 100, 40), this);
 }
 
 CMainWnd::CMainWnd(int res_id, LPCTSTR WndName)
@@ -65,7 +65,8 @@ void CMainWnd::OnCancel()
 {
 	//CWinApp* app = AfxGetApp();
 	//app->WriteProfileInt(L"Controls", L"COMName", 777);
-	DestroyWindow();
+	this->DestroyWindow();
+	delete this;
 }
 
 void CMainWnd::OnMenuClickedEditor()
@@ -88,11 +89,11 @@ CEditorWnd::CEditorWnd(CWnd* parent)
 
 CEditorWnd::~CEditorWnd()
 {
-
+	delete ep;
 }
 
 void CEditorWnd::OnCancel()
-{
-	DestroyWindow();
+{	
+	this->DestroyWindow();
 }
 //===========================================================================================================================
