@@ -1,6 +1,6 @@
-//{{NO_DEPENDENCIES}}
-// Включаемый файл, созданный в Microsoft Visual C++.
-// Используется LirSync.rc
+п»ї//{{NO_DEPENDENCIES}}
+// Р’РєР»СЋС‡Р°РµРјС‹Р№ С„Р°Р№Р», СЃРѕР·РґР°РЅРЅС‹Р№ РІ Microsoft Visual C++.
+// РСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ LirSync.rc
 //
 #define IDD_MainDlg                     101
 #define IDR_MainMenu                    102
