@@ -11,12 +11,9 @@ CLirSync::CLirSync() // конструктор главного класса п�
 BOOL CLirSync::InitInstance() // стандартная инициализация
 {
 	SetRegistryKey(_T("SKBIS"));
-	m_pMainWnd = new CMainWnd(IDD_MainDlg, this->m_pszAppName);	// создать класс окна
+	//m_pMainWnd = new CMainWnd(IDD_MainDlg,NULL, this->m_pszAppName);
+	m_pMainWnd = new CEditorWnd(IDD_EditorDlg, NULL,NULL);
 	ASSERT(m_pMainWnd);	// проверить его правильность
-	//m_pMainWnd->ShowWindow(SW_SHOW);// Показать окно
-	//m_pMainWnd->UpdateWindow();	// Обновить окно
-	//((CDialog*)m_pMainWnd)->Create(IDD_MainDlg, NULL);
-	//((CDialog*)m_pMainWnd)->ShowWindow(SW_SHOW);
 	return TRUE;		// Вернуть что все нормально
 };
 //===========================================================================================================================
@@ -29,20 +26,12 @@ BEGIN_MESSAGE_MAP(CMainWnd, CDialog)
 	ON_BN_CLICKED(IDM_Editor, &CMainWnd::OnMenuClickedEditor)
 END_MESSAGE_MAP()
 
-CMainWnd::CMainWnd() {
-	//Create(NULL,L"CMainWnd def ctor", WS_OVERLAPPEDWINDOW, rectDefault, NULL, NULL);	// Создать окно программы
-}
-
-CMainWnd::CMainWnd(LPCTSTR WndName, int x, int y) {
-
-	//Create(NULL, WndName, WS_OVERLAPPEDWINDOW,CRect(x,y,x + 320,y + 300), NULL, NULL);	// Создать окно программы
-}
-
-CMainWnd::CMainWnd(int res_id, LPCTSTR WndName)
+CMainWnd::CMainWnd(int res_id, CWnd* parent, LPCTSTR WndName)
 {
-	this->Create(res_id, NULL);
+	this->Create(res_id, parent);
 	this->ShowWindow(SW_SHOW);
-	this->SetWindowTextW(WndName);
+	if(WndName != NULL)
+		this->SetWindowTextW(WndName);
 
 	//m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);  установка иконки
 }
@@ -69,7 +58,7 @@ void CMainWnd::OnCancel()
 
 void CMainWnd::OnMenuClickedEditor()
 {
-	EWindow = new CEditorWnd(this);
+	EWindow = new CEditorWnd(IDD_EditorDlg,this,NULL);
 }
 
 //===========================================================================================================================
@@ -81,16 +70,19 @@ BEGIN_MESSAGE_MAP(CEditorWnd, CDialog)
 	ON_BN_CLICKED(IDC_Btn_Editor_Open, &CEditorWnd::OnClickedOpen)
 	ON_NOTIFY(TVN_SELCHANGED, IDC_TREE_param, &CEditorWnd::OnClickedTree)
 	ON_NOTIFY(NM_CLICK, IDC_LIST_param, &CEditorWnd::OnClickedList)
+	ON_NOTIFY(NM_DBLCLK, IDC_LIST_param, &CEditorWnd::OnClickedList)
 END_MESSAGE_MAP()
 
-CEditorWnd::CEditorWnd(CWnd* parent)
+CEditorWnd::CEditorWnd(int res_id,CWnd* parent, LPCTSTR WndName)
 {
-	this->Create(IDD_EditorDlg,parent);
+	this->Create(res_id,parent);
 	this->ShowWindow(SW_SHOW);
+	if(WndName != NULL)
+		this->SetWindowTextW(WndName);
 	tree.Attach(this->GetDlgItem(IDC_TREE_param)->GetSafeHwnd());
 	list.Attach(this->GetDlgItem(IDC_LIST_param)->GetSafeHwnd());
-	InitTree();
-	InitList();
+	InitTree();	
+	list.EnableWindow(FALSE);
 }
 
 CEditorWnd::~CEditorWnd()
@@ -111,10 +103,27 @@ void CEditorWnd::OnClickedOpen()
 void CEditorWnd::OnClickedTree(NMHDR* pNMHDR, LRESULT* pResult)
 {
 	LPNMTREEVIEWW pNMA = (LPNMTREEVIEWW)pNMHDR;
-	CString tmp = tree.GetItemText(pNMA->itemNew.hItem);
-	
-	if (tmp == L"Оси - Измерительные каналы") {
-		AfxMessageBox(tmp);
+	CString str = tree.GetItemText(pNMA->itemNew.hItem);
+
+	if (str == L"Оси - Измерительные каналы") {
+		list.EnableWindow(TRUE);
+		InitList(L"ПУЛЬТ - ОСЬ",L"");
+		list.InsertItem(0, _T("P2.0"));
+		list.InsertItem(1, _T("P2.1"));
+		list.InsertItem(2, _T("P2.2"));
+		list.InsertItem(3, _T("P2.3"));
+		list.InsertItem(4, _T("P2  "));
+		upd_data_pa();		
+	}
+	else {
+		if (list.IsWindowEnabled() == TRUE) {
+			list.DeleteColumn(0);
+			list.DeleteColumn(1);
+			list.DeleteAllItems();
+			list.EnableWindow(FALSE);
+		}
+		
+		ASSERT(list.GetItemCount() == 0);
 	}
 	//AfxMessageBox(tmp);
 
@@ -129,13 +138,20 @@ void CEditorWnd::OnClickedList(NMHDR* pNMHDR, LRESULT* pResult)
 	CString str;
 	hti.pt = pNMA->ptAction;
 	list.SubItemHitTest(&hti);
+	HTREEITEM tr = tree.GetSelectedItem();
+	str = tree.GetItemText(tr);
 
-	//if (hti.iSubItem > 0)
-	//{
-		//int n = hti.iItem * 10 + (hti.iSubItem - 2);
-		str.Format(L"Столбец: %d   Строка: %d", hti.iSubItem, hti.iItem);
-		AfxMessageBox(str);
-	//}
+	//str.Format(L"Столбец: %d   Строка: %d", hti.iSubItem, hti.iItem);
+	//AfxMessageBox(str);
+	if (str == L"Оси - Измерительные каналы") {
+		if (hti.iSubItem == 1 && hti.iItem >= 0) {
+			data.P2[hti.iItem]++;
+			if (data.P2[hti.iItem] > 13)
+				data.P2[hti.iItem] = 0;
+			upd_data_pa();
+		}
+	}		
+
 	*pResult = 0;
 }
 
@@ -158,31 +174,22 @@ void CEditorWnd::InitTree()
 	tree.InsertItem(L"Канал P2.3", it2);
 }
 
-void CEditorWnd::InitList()
+void CEditorWnd::InitList(LPCTSTR Colname0, LPCTSTR Colname1)
 {
 	CRect rect;
+	list.GetClientRect(rect);
 	list.SetExtendedStyle(LVS_EX_GRIDLINES);
-	list.InsertColumn(0, _T("Параметр"), LVCFMT_LEFT, 100);
-	list.InsertColumn(1, _T("Состояние"), LVCFMT_LEFT, 100);
-	/*CString strText;
-	int nColumnCount = 5;
+	list.InsertColumn(0, Colname0, LVCFMT_LEFT, rect.Width()/1.5);
+	list.InsertColumn(1, Colname1, LVCFMT_LEFT, rect.Width() / 3);
+}
 
-	// Insert 10 items in the list view control.
-	for (int i = 0; i < 10; i++)
-	{
-		strText.Format(TEXT("item %d"), i);
-
-		// Insert the item, select every other item.
-		list.InsertItem(LVIF_TEXT | LVIF_STATE, i, strText,
-			(i % 2) == 0 ? LVIS_SELECTED : 0, LVIS_SELECTED, 0, 0);
-
-		// Initialize the text of the subitems.
-		for (int j = 1; j < nColumnCount; j++)
-		{
-			strText.Format(TEXT("sub-item %d %d"), i, j);
-			list.SetItemText(i, j, strText);
-		}
-	} */
+void CEditorWnd::upd_data_pa()
+{
+	list.SetItemText(0, 1, data.sAxis_symbol[data.P2[0]]);
+	list.SetItemText(1, 1, data.sAxis_symbol[data.P2[1]]);
+	list.SetItemText(2, 1, data.sAxis_symbol[data.P2[2]]);
+	list.SetItemText(3, 1, data.sAxis_symbol[data.P2[3]]);
+	list.SetItemText(4, 1, data.sAxis_symbol_sw[data.P2[4]]);
 }
 
 //===========================================================================================================================

@@ -27,11 +27,9 @@ public:
 class CMainWnd : public CDialog
 {
 public:
-	CMainWnd();
+	CMainWnd(int res_id, CWnd* parent, LPCTSTR WndName);
 	~CMainWnd();
-	CMainWnd(LPCTSTR WndName, int x, int y);
-	CMainWnd(int res_id, LPCTSTR WndName);
-
+	
 	afx_msg void OnMenuClickedEditor();
 protected:
 	DECLARE_MESSAGE_MAP();
@@ -44,7 +42,7 @@ private:
 
 class CEditorWnd : public CDialog {
 public:
-	CEditorWnd(CWnd* parent);
+	CEditorWnd(int res_id,CWnd* parent, LPCTSTR WndName);
 	~CEditorWnd();
 
 	afx_msg void OnClickedOpen();	
@@ -59,7 +57,9 @@ private:
 	CEeprom data;
 
 	void InitTree();
-	void InitList();
+
+	void InitList(LPCTSTR Colname0, LPCTSTR Colname1);
+	void upd_data_pa(); //МЕНЮ "ПУЛЬТ - ОСЬ(pa)"
 };
 
 
