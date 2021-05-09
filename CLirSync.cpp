@@ -107,7 +107,7 @@ void CEditorWnd::OnClickedTree(NMHDR* pNMHDR, LRESULT* pResult)
 
 	if (str == L"Оси - Измерительные каналы") {
 		list.EnableWindow(TRUE);
-		InitList(L"ПУЛЬТ - ОСЬ",L"");
+		InitList(L"ПУЛЬТ - ОСЬ",100,L"");
 		list.InsertItem(0, _T("P2.0"));
 		list.InsertItem(1, _T("P2.1"));
 		list.InsertItem(2, _T("P2.2"));
@@ -119,6 +119,7 @@ void CEditorWnd::OnClickedTree(NMHDR* pNMHDR, LRESULT* pResult)
 		if (list.IsWindowEnabled() == TRUE) {
 			list.DeleteColumn(0);
 			list.DeleteColumn(1);
+			list.DeleteColumn(2);
 			list.DeleteAllItems();
 			list.EnableWindow(FALSE);
 		}
@@ -173,14 +174,18 @@ void CEditorWnd::InitTree()
 	tree.InsertItem(L"Канал P2.2", it2);
 	tree.InsertItem(L"Канал P2.3", it2);
 }
-
-void CEditorWnd::InitList(LPCTSTR Colname0, LPCTSTR Colname1)
+/*
+* LPCTSTR Colname0 - имя колонки0
+* int sz0 - размер колонки0
+* LPCTSTR Colname1 - имя колонки1
+*/
+void CEditorWnd::InitList(LPCTSTR Colname0,int sz0, LPCTSTR Colname1)
 {
 	CRect rect;
 	list.GetClientRect(rect);
 	list.SetExtendedStyle(LVS_EX_GRIDLINES);
-	list.InsertColumn(0, Colname0, LVCFMT_LEFT, rect.Width()/1.5);
-	list.InsertColumn(1, Colname1, LVCFMT_LEFT, rect.Width() / 3);
+	list.InsertColumn(0, Colname0, LVCFMT_LEFT, sz0);
+	list.InsertColumn(1, Colname1, LVCFMT_LEFT, rect.Width() - sz0);
 }
 
 void CEditorWnd::upd_data_pa()

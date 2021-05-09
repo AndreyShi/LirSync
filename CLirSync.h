@@ -58,7 +58,7 @@ private:
 
 	void InitTree();
 
-	void InitList(LPCTSTR Colname0, LPCTSTR Colname1);
+	void InitList(LPCTSTR Colname0, int sz0, LPCTSTR Colname1);
 	void upd_data_pa(); //МЕНЮ "ПУЛЬТ - ОСЬ(pa)"
 };
 
