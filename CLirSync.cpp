@@ -67,6 +67,7 @@ void CMainWnd::OnMenuClickedEditor()
 
 //========================================================CEditorWnd=========================================================
 BEGIN_MESSAGE_MAP(CEditorWnd, CDialog)
+	ON_WM_MOUSEMOVE()
 	ON_WM_TIMER()
 	ON_BN_CLICKED(IDC_Btn_Editor_Open, &CEditorWnd::OnClickedOpen)
 	ON_NOTIFY(TVN_SELCHANGED, IDC_TREE_param, &CEditorWnd::OnClickedTree)
@@ -116,10 +117,10 @@ void CEditorWnd::OnClickedTree(NMHDR* pNMHDR, LRESULT* pResult)
 						 _T("P2"),
 						  nullptr);
 		list.upd_data_pa(data);	
-		SetTimer(IDT_TIMER, 1, [](HWND hwnd, UINT u, UINT_PTR ptr, DWORD dword) {
+		/*SetTimer(IDT_TIMER, 1, [](HWND hwnd, UINT u, UINT_PTR ptr, DWORD dword) {
 			::KillTimer(hwnd,IDT_TIMER);
 			::SetFocus(::GetDlgItem(hwnd, IDC_LIST_param));
-			});
+			});*/
 	}
 	else {
 		if (list.IsWindowEnabled() == TRUE) {
@@ -159,6 +160,16 @@ void CEditorWnd::OnClickedList(NMHDR* pNMHDR, LRESULT* pResult)
 	}		
 
 	*pResult = 0;
+}
+
+void CEditorWnd::OnMouseMove(UINT nFlags, CPoint point)
+{
+	CString str;
+	str.Format(L"X: %d", point.x);
+	this->GetDlgItem(IDC_STATIC1)->SetWindowTextW(str);
+	str.Format(L"Y: %d", point.y);
+	this->GetDlgItem(IDC_STATIC2)->SetWindowTextW(str);
+	list.SetFocus();	
 }
 
 void CEditorWnd::OnCancel()
