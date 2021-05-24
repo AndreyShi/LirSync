@@ -5,6 +5,7 @@
 #define IDD_MainDlg                     101
 #define IDR_MainMenu                    102
 #define IDD_EditorDlg                   103
+#define IDT_TIMER                       104
 #define IDC_TREE_param                  1001
 #define IDC_LIST_param                  1002
 #define IDC_Btn_Editor_Open             1003

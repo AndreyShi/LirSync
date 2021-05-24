@@ -17,6 +17,7 @@ class CLirSync;
 class CMainWnd;
 class CEditorWnd;
 
+
 class CLirSync : public CWinApp
 {
 public:
@@ -40,6 +41,17 @@ private:
 	CEditorWnd* EWindow;
 };
 
+class CParamList : public CListCtrl {
+public:
+	void CreateHead(LPCTSTR Colname0, int sz0, LPCTSTR Colname1);
+	void InsertItems(LPCTSTR item0, ...);
+
+	void upd_data_pa(CEeprom &data); //"ПУЛЬТ - ОСЬ(pa)"
+
+	void Enable();
+	void Disable();
+};
+
 class CEditorWnd : public CDialog {
 public:
 	CEditorWnd(int res_id,CWnd* parent, LPCTSTR WndName);
@@ -53,13 +65,10 @@ protected:
 	virtual void OnCancel();
 private:
 	CTreeCtrl tree;
-	CListCtrl list;
+	CParamList list;
 	CEeprom data;
 
 	void InitTree();
-
-	void InitList(LPCTSTR Colname0, int sz0, LPCTSTR Colname1);
-	void upd_data_pa(); //МЕНЮ "ПУЛЬТ - ОСЬ(pa)"
 };
 
 

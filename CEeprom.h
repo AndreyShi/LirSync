@@ -1,5 +1,5 @@
 ﻿#pragma once
-//#include "CLirSync.h"
+
 #include "afxwin.h" // MFC Основные и стандартные компоненты
 #include "afxcmn.h"
 #include <stdint.h>

@@ -67,6 +67,7 @@ void CMainWnd::OnMenuClickedEditor()
 
 //========================================================CEditorWnd=========================================================
 BEGIN_MESSAGE_MAP(CEditorWnd, CDialog)
+	ON_WM_TIMER()
 	ON_BN_CLICKED(IDC_Btn_Editor_Open, &CEditorWnd::OnClickedOpen)
 	ON_NOTIFY(TVN_SELCHANGED, IDC_TREE_param, &CEditorWnd::OnClickedTree)
 	ON_NOTIFY(NM_CLICK, IDC_LIST_param, &CEditorWnd::OnClickedList)
@@ -82,7 +83,7 @@ CEditorWnd::CEditorWnd(int res_id,CWnd* parent, LPCTSTR WndName)
 	tree.Attach(this->GetDlgItem(IDC_TREE_param)->GetSafeHwnd());
 	list.Attach(this->GetDlgItem(IDC_LIST_param)->GetSafeHwnd());
 	InitTree();	
-	list.EnableWindow(FALSE);
+	list.Disable();
 }
 
 CEditorWnd::~CEditorWnd()
@@ -106,14 +107,19 @@ void CEditorWnd::OnClickedTree(NMHDR* pNMHDR, LRESULT* pResult)
 	CString str = tree.GetItemText(pNMA->itemNew.hItem);
 
 	if (str == L"Оси - Измерительные каналы") {
-		list.EnableWindow(TRUE);
-		InitList(L"ПУЛЬТ - ОСЬ",100,L"");
-		list.InsertItem(0, _T("P2.0"));
-		list.InsertItem(1, _T("P2.1"));
-		list.InsertItem(2, _T("P2.2"));
-		list.InsertItem(3, _T("P2.3"));
-		list.InsertItem(4, _T("P2  "));
-		upd_data_pa();		
+		list.Enable();
+		list.CreateHead(L"ПУЛЬТ - ОСЬ",100,L"");
+		list.InsertItems(_T("P2.0"),
+						 _T("P2.1"),
+						 _T("P2.2"),
+						 _T("P2.3"),
+						 _T("P2"),
+						  nullptr);
+		list.upd_data_pa(data);	
+		SetTimer(IDT_TIMER, 1, [](HWND hwnd, UINT u, UINT_PTR ptr, DWORD dword) {
+			::KillTimer(hwnd,IDT_TIMER);
+			::SetFocus(::GetDlgItem(hwnd, IDC_LIST_param));
+			});
 	}
 	else {
 		if (list.IsWindowEnabled() == TRUE) {
@@ -121,7 +127,7 @@ void CEditorWnd::OnClickedTree(NMHDR* pNMHDR, LRESULT* pResult)
 			list.DeleteColumn(1);
 			list.DeleteColumn(2);
 			list.DeleteAllItems();
-			list.EnableWindow(FALSE);
+			list.Disable();
 		}
 		
 		ASSERT(list.GetItemCount() == 0);
@@ -133,7 +139,6 @@ void CEditorWnd::OnClickedTree(NMHDR* pNMHDR, LRESULT* pResult)
 
 void CEditorWnd::OnClickedList(NMHDR* pNMHDR, LRESULT* pResult)
 {
-
 	LPNMITEMACTIVATE pNMA = (LPNMITEMACTIVATE)pNMHDR;
 	LVHITTESTINFO hti;
 	CString str;
@@ -149,7 +154,7 @@ void CEditorWnd::OnClickedList(NMHDR* pNMHDR, LRESULT* pResult)
 			data.P2[hti.iItem]++;
 			if (data.P2[hti.iItem] > 13)
 				data.P2[hti.iItem] = 0;
-			upd_data_pa();
+			list.upd_data_pa(data);
 		}
 	}		
 
@@ -174,27 +179,52 @@ void CEditorWnd::InitTree()
 	tree.InsertItem(L"Канал P2.2", it2);
 	tree.InsertItem(L"Канал P2.3", it2);
 }
+//===========================================================================================================================
+   
+   
+   
+//========================================================CParamList=========================================================
 /*
 * LPCTSTR Colname0 - имя колонки0
 * int sz0 - размер колонки0
 * LPCTSTR Colname1 - имя колонки1
 */
-void CEditorWnd::InitList(LPCTSTR Colname0,int sz0, LPCTSTR Colname1)
+void CParamList::CreateHead(LPCTSTR Colname0, int sz0, LPCTSTR Colname1)
 {
 	CRect rect;
-	list.GetClientRect(rect);
-	list.SetExtendedStyle(LVS_EX_GRIDLINES);
-	list.InsertColumn(0, Colname0, LVCFMT_LEFT, sz0);
-	list.InsertColumn(1, Colname1, LVCFMT_LEFT, rect.Width() - sz0);
+	GetClientRect(rect);
+	SetExtendedStyle(LVS_EX_GRIDLINES);
+	InsertColumn(0, Colname0, LVCFMT_LEFT, sz0);
+	InsertColumn(1, Colname1, LVCFMT_LEFT, rect.Width() - sz0);
 }
 
-void CEditorWnd::upd_data_pa()
+void CParamList::InsertItems(LPCTSTR item0, ...)
 {
-	list.SetItemText(0, 1, data.sAxis_symbol[data.P2[0]]);
-	list.SetItemText(1, 1, data.sAxis_symbol[data.P2[1]]);
-	list.SetItemText(2, 1, data.sAxis_symbol[data.P2[2]]);
-	list.SetItemText(3, 1, data.sAxis_symbol[data.P2[3]]);
-	list.SetItemText(4, 1, data.sAxis_symbol_sw[data.P2[4]]);
+	LPCTSTR* pp = &item0;
+	int cnt = 0;
+	while (*pp != nullptr) {
+		InsertItem(cnt, *pp);
+		pp++;
+		cnt++;
+	}
 }
 
+void CParamList::upd_data_pa(CEeprom& data)
+{
+	SetItemText(0, 1, data.sAxis_symbol[data.P2[0]]);
+	SetItemText(1, 1, data.sAxis_symbol[data.P2[1]]);
+	SetItemText(2, 1, data.sAxis_symbol[data.P2[2]]);
+	SetItemText(3, 1, data.sAxis_symbol[data.P2[3]]);
+	SetItemText(4, 1, data.sAxis_symbol_sw[data.P2[4]]);
+}
+
+void CParamList::Enable()
+{
+	EnableWindow(TRUE);
+}
+
+void CParamList::Disable()
+{
+	EnableWindow(FALSE);
+}
 //===========================================================================================================================
