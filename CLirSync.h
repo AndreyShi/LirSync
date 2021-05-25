@@ -46,10 +46,17 @@ public:
 	void CreateHead(LPCTSTR Colname0, int sz0, LPCTSTR Colname1);
 	void InsertItems(LPCTSTR item0, ...);
 
-	void upd_data_pa(CEeprom &data); //"ПУЛЬТ - ОСЬ(pa)"
+	//"ПУЛЬТ - ОСЬ(PA)"
+	void init_PA();
+	void click_PA(int str);
+	void upd_PA(); 
+	//
 
 	void Enable();
+	void Clear();
 	void Disable();
+public:
+	CEeprom data;
 };
 
 class CEditorWnd : public CDialog {
@@ -66,8 +73,7 @@ protected:
 	virtual void OnCancel();
 private:
 	CTreeCtrl tree;
-	CParamList list;
-	CEeprom data;
+	CParamList list;	
 
 	void InitTree();
 };

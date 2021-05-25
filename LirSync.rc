@@ -66,8 +66,6 @@ BEGIN
     CONTROL         "",IDC_TREE_param,"SysTreeView32",TVS_HASBUTTONS | TVS_HASLINES | TVS_LINESATROOT | WS_BORDER | WS_HSCROLL | WS_TABSTOP,7,7,107,132
     CONTROL         "",IDC_LIST_param,"SysListView32",LVS_REPORT | LVS_ALIGNLEFT | WS_BORDER | WS_TABSTOP,142,7,212,207
     PUSHBUTTON      "Открыть",IDC_Btn_Editor_Open,7,200,50,14
-    LTEXT           "Статический",IDC_STATIC1,7,148,45,8
-    LTEXT           "Статический",IDC_STATIC2,7,162,45,8
 END
 
 

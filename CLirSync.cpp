@@ -98,7 +98,7 @@ void CEditorWnd::OnClickedOpen()
 	int result = fileDialog.DoModal();	//запустить диалоговое окно
 	if (result == IDOK)	//если файл выбран
 	{
-		data.load(fileDialog.GetPathName());
+		list.data.load(fileDialog.GetPathName());
 	}
 }
 
@@ -108,32 +108,16 @@ void CEditorWnd::OnClickedTree(NMHDR* pNMHDR, LRESULT* pResult)
 	CString str = tree.GetItemText(pNMA->itemNew.hItem);
 
 	if (str == L"Оси - Измерительные каналы") {
-		list.Enable();
-		list.CreateHead(L"ПУЛЬТ - ОСЬ",100,L"");
-		list.InsertItems(_T("P2.0"),
-						 _T("P2.1"),
-						 _T("P2.2"),
-						 _T("P2.3"),
-						 _T("P2"),
-						  nullptr);
-		list.upd_data_pa(data);	
-		/*SetTimer(IDT_TIMER, 1, [](HWND hwnd, UINT u, UINT_PTR ptr, DWORD dword) {
-			::KillTimer(hwnd,IDT_TIMER);
-			::SetFocus(::GetDlgItem(hwnd, IDC_LIST_param));
-			});*/
+		list.init_PA();					
 	}
 	else {
 		if (list.IsWindowEnabled() == TRUE) {
-			list.DeleteColumn(0);
-			list.DeleteColumn(1);
-			list.DeleteColumn(2);
-			list.DeleteAllItems();
+			list.Clear();			
 			list.Disable();
 		}
 		
 		ASSERT(list.GetItemCount() == 0);
 	}
-	//AfxMessageBox(tmp);
 
 	*pResult = 0;
 }
@@ -149,27 +133,26 @@ void CEditorWnd::OnClickedList(NMHDR* pNMHDR, LRESULT* pResult)
 	str = tree.GetItemText(tr);
 
 	//str.Format(L"Столбец: %d   Строка: %d", hti.iSubItem, hti.iItem);
-	//AfxMessageBox(str);
-	if (str == L"Оси - Измерительные каналы") {
-		if (hti.iSubItem == 1 && hti.iItem >= 0) {
-			data.P2[hti.iItem]++;
-			if (data.P2[hti.iItem] > 13)
-				data.P2[hti.iItem] = 0;
-			list.upd_data_pa(data);
+	//AfxMessageBox(str);	
+	if (hti.iSubItem == 1 && hti.iItem >= 0) {
+		if (str == L"Оси - Измерительные каналы") {
+			list.click_PA(hti.iItem);
 		}
-	}		
+	}			
 
 	*pResult = 0;
 }
-
+/*
+* установка фокуса на List (что бы не было доп щелчка мышью для установки фокуса)
+*/
 void CEditorWnd::OnMouseMove(UINT nFlags, CPoint point)
 {
-	CString str;
-	str.Format(L"X: %d", point.x);
-	this->GetDlgItem(IDC_STATIC1)->SetWindowTextW(str);
-	str.Format(L"Y: %d", point.y);
-	this->GetDlgItem(IDC_STATIC2)->SetWindowTextW(str);
-	list.SetFocus();	
+	CWnd* wn = GetFocus();
+	if (wn != &list) {
+		if (list.IsWindowEnabled()) {
+			list.SetFocus();
+		}		
+	}
 }
 
 void CEditorWnd::OnCancel()
@@ -220,7 +203,30 @@ void CParamList::InsertItems(LPCTSTR item0, ...)
 	}
 }
 
-void CParamList::upd_data_pa(CEeprom& data)
+void CParamList::init_PA()
+{
+	Enable();
+	CreateHead(L"ПУЛЬТ - ОСЬ", 100, L"");
+	InsertItems(_T("P2.0"),
+		_T("P2.1"),
+		_T("P2.2"),
+		_T("P2.3"),
+		_T("P2"),
+		nullptr);
+
+	upd_PA();
+}
+
+void CParamList::click_PA(int str)
+{
+	data.P2[str]++;
+	if (data.P2[str] > 13)
+		data.P2[str] = 0;
+
+	SetItemText(str, 1, data.sAxis_symbol[data.P2[str]]);//upd_PA(data);
+}
+
+void CParamList::upd_PA()
 {
 	SetItemText(0, 1, data.sAxis_symbol[data.P2[0]]);
 	SetItemText(1, 1, data.sAxis_symbol[data.P2[1]]);
@@ -232,6 +238,14 @@ void CParamList::upd_data_pa(CEeprom& data)
 void CParamList::Enable()
 {
 	EnableWindow(TRUE);
+}
+
+void CParamList::Clear()
+{
+	DeleteColumn(0);
+	DeleteColumn(1);
+	DeleteColumn(2);
+	DeleteAllItems();
 }
 
 void CParamList::Disable()
