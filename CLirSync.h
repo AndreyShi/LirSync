@@ -11,7 +11,8 @@ processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
 #include <stdint.h>
 #include <fstream>
 #include "resource.h"
-#include "CEeprom.h"
+#include "CParamList.h"
+
 
 class CLirSync;
 class CMainWnd;
@@ -39,24 +40,6 @@ protected:
 private:
 	CTabCtrl tab;
 	CEditorWnd* EWindow;
-};
-
-class CParamList : public CListCtrl {
-public:
-	void CreateHead(LPCTSTR Colname0, int sz0, LPCTSTR Colname1);
-	void InsertItems(LPCTSTR item0, ...);
-
-	//"ПУЛЬТ - ОСЬ(PA)"
-	void init_PA();
-	void click_PA(int str);
-	void upd_PA(); 
-	//
-
-	void Enable();
-	void Clear();
-	void Disable();
-public:
-	CEeprom data;
 };
 
 class CEditorWnd : public CDialog {

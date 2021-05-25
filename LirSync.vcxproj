@@ -143,10 +143,12 @@
   <ItemGroup>
     <ClCompile Include="CEeprom.cpp" />
     <ClCompile Include="CLirSync.cpp" />
+    <ClCompile Include="CParamList.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CEeprom.h" />
     <ClInclude Include="CLirSync.h" />
+    <ClInclude Include="CParamList.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>

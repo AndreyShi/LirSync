@@ -35,7 +35,19 @@ void CEeprom::load(const CString& _file_path)
 	read(0, sizeof(P2[0]) * N_AXIS, &P2);
 	read(4, sizeof(Str), &Str);
 	read(8, sizeof(axis_cfg[0]) * N_AXIS, &axis_cfg);
-	read(56, 5 * N_AXIS, &new_coeff_);
+	//read coeff
+	read(56, 4, &new_coeff_[0].binary);
+	read(60, 1, &new_coeff_[0].n_after_dot);
+
+	read(61, 4, &new_coeff_[1].binary);
+	read(65, 1, &new_coeff_[1].n_after_dot);
+
+	read(66, 4, &new_coeff_[2].binary);
+	read(70, 1, &new_coeff_[2].n_after_dot);
+
+	read(71, 4, &new_coeff_[3].binary);
+	read(75, 1, &new_coeff_[3].n_after_dot);
+	//
 	read(76, sizeof(offset_g5x), &offset_g5x);
 	read(172, sizeof(position_to_see), &position_to_see);
 	read(176, sizeof(contrast_value), &contrast_value);
@@ -76,7 +88,19 @@ void CEeprom::save(const CString& _file_path)
 	write(0, sizeof(P2[0]) * N_AXIS, &P2);
 	write(4, sizeof(Str), &Str);
 	write(8, sizeof(axis_cfg[0]) * N_AXIS, &axis_cfg);
-	write(56, 5 * N_AXIS, &new_coeff_);
+	//write coeff
+	write(56, 4, &new_coeff_[0].binary);
+	write(60, 1, &new_coeff_[0].n_after_dot);
+
+	write(61, 4, &new_coeff_[1].binary);
+	write(65, 1, &new_coeff_[1].n_after_dot);
+
+	write(66, 4, &new_coeff_[2].binary);
+	write(70, 1, &new_coeff_[2].n_after_dot);
+
+	write(71, 4, &new_coeff_[3].binary);
+	write(75, 1, &new_coeff_[3].n_after_dot);
+	//
 	write(76, sizeof(offset_g5x), &offset_g5x);
 	write(172, sizeof(position_to_see), &position_to_see);
 	write(176, sizeof(contrast_value), &contrast_value);

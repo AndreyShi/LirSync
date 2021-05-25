@@ -373,3 +373,23 @@ public:
 	//=====================================================================================================================
 	
 };
+
+class CInit {
+public:
+	enum AXIS_NAME {
+		AXIS_X,
+		AXIS_Y,
+		AXIS_Z,
+		AXIS_U,
+		AXIS_V,
+		AXIS_W,
+		AXIS_P,
+		AXIS_Q,
+		AXIS_R,
+		AXIS_A,
+		AXIS_B,
+		AXIS_C,
+		AXIS_D,
+		NO_AXIS,
+	};
+};
