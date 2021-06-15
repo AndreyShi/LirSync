@@ -49,6 +49,7 @@ public:
 
 	afx_msg void OnClickedOpen();	
 	afx_msg void OnClickedTree(NMHDR* pNMHDR, LRESULT* pResult);
+	afx_msg void OnClickingTree(NMHDR* pNMHDR, LRESULT* pResult);
 	afx_msg void OnClickedList(NMHDR* pNMHDR, LRESULT* pResult);
 	afx_msg void OnMouseMove(UINT nFlags, CPoint point);
 protected:

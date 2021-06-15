@@ -1,17 +1,15 @@
 #include "CParamList.h"
 
-/*
-* LPCTSTR Colname0 - имя колонки0
-* int sz0 - размер колонки0
-* LPCTSTR Colname1 - имя колонки1
-*/
-void CParamList::CreateHead(LPCTSTR Colname0, int sz0, LPCTSTR Colname1)
+void CParamList::CreateHead(Column obj,...)
 {
-	CRect rect;
-	GetClientRect(rect);
 	SetExtendedStyle(LVS_EX_GRIDLINES);
-	InsertColumn(0, Colname0, LVCFMT_LEFT, sz0);
-	InsertColumn(1, Colname1, LVCFMT_LEFT, rect.Width() - sz0);
+	Column* pp = &obj;
+	int cnt = 0;
+	while (pp->Colname != nullptr) {
+		InsertColumn(cnt, pp->Colname, LVCFMT_LEFT, pp->sz);
+		pp++;
+		cnt++;
+	}
 }
 
 void CParamList::InsertItems(LPCTSTR item0, ...)
@@ -29,12 +27,15 @@ void CParamList::Enable()
 {
 	EnableWindow(TRUE);
 }
+/*
+* удаление столбцов
+* int cnt_clmn - кол во столбцов для удаления
+*/
+void CParamList::Clear(int cnt_clmn)
+{	
+	for(int c = 0; c < cnt_clmn;c++)
+		DeleteColumn(0);
 
-void CParamList::Clear()
-{
-	DeleteColumn(0);
-	DeleteColumn(1);
-	DeleteColumn(2);
 	DeleteAllItems();
 }
 
@@ -46,9 +47,8 @@ void CParamList::Disable()
 void CParamList::init_PA()
 {
 	Enable();
-	CreateHead(L"ПУЛЬТ - ОСЬ", 100, L"");
-	InsertItems(_T("P2.0"),_T("P2.1"),_T("P2.2"),_T("P2.3"),_T("P2"),nullptr);
-
+	CreateHead(Column(L"ПУЛЬТ - ОСЬ", 100), Column(L"", 100),nullptr);
+	InsertItems(_T("        P2.0"), _T("        P2.1"), _T("        P2.2"), _T("        P2.3"), _T("        P2"),nullptr);
 	upd_PA();
 }
 
@@ -112,6 +112,22 @@ int CParamList::incdec_axis(const char dir, signed char axis)
 			axis--;
 	}
 	return axis;
+}
+
+void CParamList::init_DA()
+{
+	Enable();
+	CreateHead(Column(L"СТРОКА ИНДИКАЦИИ", 130),nullptr);
+	InsertItems(_T("              1"), _T("              2"), _T("              3"), _T("              4"), nullptr);
+	upd_DA();
+}
+
+void CParamList::click_DA()
+{
+}
+
+void CParamList::upd_DA()
+{
 }
 
 

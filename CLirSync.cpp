@@ -71,6 +71,7 @@ BEGIN_MESSAGE_MAP(CEditorWnd, CDialog)
 	ON_WM_TIMER()
 	ON_BN_CLICKED(IDC_Btn_Editor_Open, &CEditorWnd::OnClickedOpen)
 	ON_NOTIFY(TVN_SELCHANGED, IDC_TREE_param, &CEditorWnd::OnClickedTree)
+	ON_NOTIFY(TVN_SELCHANGING,IDC_TREE_param, &CEditorWnd::OnClickingTree)
 	ON_NOTIFY(NM_CLICK, IDC_LIST_param, &CEditorWnd::OnClickedList)
 	ON_NOTIFY(NM_DBLCLK, IDC_LIST_param, &CEditorWnd::OnClickedList)
 END_MESSAGE_MAP()
@@ -101,24 +102,29 @@ void CEditorWnd::OnClickedOpen()
 		list.data.load(fileDialog.GetPathName());
 	}
 }
-
+/*
+* Инициализация таблицы
+*/
 void CEditorWnd::OnClickedTree(NMHDR* pNMHDR, LRESULT* pResult)
 {
 	LPNMTREEVIEWW pNMA = (LPNMTREEVIEWW)pNMHDR;
 	CString str = tree.GetItemText(pNMA->itemNew.hItem);
 
-	if (str == L"Оси - Измерительные каналы") {
+	if (str == L"Оси - Измерительные каналы")
 		list.init_PA();					
-	}
-	else {
-		if (list.IsWindowEnabled() == TRUE) {
-			list.Clear();			
-			list.Disable();
-		}
-		
-		ASSERT(list.GetItemCount() == 0);
-	}
+	else if(str == L"Оси - экран")
+		list.init_DA();
 
+	*pResult = 0;
+}
+/*
+* Переключения между таблицами ,очищаем поле
+*/
+void CEditorWnd::OnClickingTree(NMHDR* pNMHDR, LRESULT* pResult)
+{
+	if(list.GetItemCount())
+		list.Clear(3);
+	ASSERT(list.GetItemCount() == 0);
 	*pResult = 0;
 }
 
@@ -135,9 +141,10 @@ void CEditorWnd::OnClickedList(NMHDR* pNMHDR, LRESULT* pResult)
 	//str.Format(L"Столбец: %d   Строка: %d", hti.iSubItem, hti.iItem);
 	//AfxMessageBox(str);	
 	if (hti.iSubItem == 1 && hti.iItem >= 0) {
-		if (str == L"Оси - Измерительные каналы") {
+		if (str == L"Оси - Измерительные каналы")
 			list.click_PA(hti.iItem);
-		}
+		else if (str == L"Оси - экран")
+			;
 	}			
 
 	*pResult = 0;
@@ -168,6 +175,7 @@ void CEditorWnd::InitTree()
 	HTREEITEM  it2 = tree.InsertItem(L"Параметры осей");		// структура элемента дерево	
 	HTREEITEM  it3 = tree.InsertItem(L"Смещения координат");	// структура элемента дерево
 	tree.InsertItem(L"Оси - Измерительные каналы", it1);			// добавить элемент	
+	tree.InsertItem(L"Оси - экран", it1);			// добавить элемент	
 	tree.InsertItem(L"Канал P2.0", it2);			// добавить элемент
 	tree.InsertItem(L"Канал P2.1", it2);
 	tree.InsertItem(L"Канал P2.2", it2);
