@@ -121,10 +121,8 @@ void CEditorWnd::OnClickedTree(NMHDR* pNMHDR, LRESULT* pResult)
 * Переключения между таблицами ,очищаем поле
 */
 void CEditorWnd::OnClickingTree(NMHDR* pNMHDR, LRESULT* pResult)
-{
-	if(list.GetItemCount())
-		list.Clear(3);
-	ASSERT(list.GetItemCount() == 0);
+{	
+	list.Clear();
 	*pResult = 0;
 }
 

@@ -1,14 +1,14 @@
 #include "CParamList.h"
 
-void CParamList::CreateHead(Column obj,...)
+void CParamList::CreateHead(Column obj0,...)
 {
 	SetExtendedStyle(LVS_EX_GRIDLINES);
-	Column* pp = &obj;
-	int cnt = 0;
+	Column* pp = &obj0;
+	cnt_clm = 0;
 	while (pp->Colname != nullptr) {
-		InsertColumn(cnt, pp->Colname, LVCFMT_LEFT, pp->sz);
+		InsertColumn(cnt_clm, pp->Colname, LVCFMT_LEFT, pp->sz);
 		pp++;
-		cnt++;
+		cnt_clm++;
 	}
 }
 
@@ -31,12 +31,16 @@ void CParamList::Enable()
 * удаление столбцов
 * int cnt_clmn - кол во столбцов для удаления
 */
-void CParamList::Clear(int cnt_clmn)
+void CParamList::Clear()
 {	
-	for(int c = 0; c < cnt_clmn;c++)
+	while (cnt_clm) {
 		DeleteColumn(0);
-
-	DeleteAllItems();
+		cnt_clm--;
+	}
+	if (GetItemCount()) {
+		DeleteAllItems();
+		ASSERT(GetItemCount() == 0);
+	}	
 }
 
 void CParamList::Disable()

@@ -6,7 +6,7 @@
 
 class CParamList : public CListCtrl {
 private:
-	class Column {
+	class Column{
 	public:
 		Column(LPCTSTR Colname_, int sz_) {
 			Colname = Colname_;
@@ -15,6 +15,7 @@ private:
 		LPCTSTR Colname;
 		int sz;
 	};
+	int cnt_clm; //текущее кол во колонок
 public:
 	CEeprom data;
 
@@ -22,7 +23,7 @@ public:
 	void InsertItems(LPCTSTR item0, ...);
 
 	void Enable();
-	void Clear(int cnt_clmn);
+	void Clear();
 	void Disable();
 
 	//"ѕ”Ћ№“ - ќ—№(PA)"
