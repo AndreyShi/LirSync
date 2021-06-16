@@ -51,15 +51,21 @@ public:
 	afx_msg void OnClickedTree(NMHDR* pNMHDR, LRESULT* pResult);
 	afx_msg void OnClickingTree(NMHDR* pNMHDR, LRESULT* pResult);
 	afx_msg void OnClickedList(NMHDR* pNMHDR, LRESULT* pResult);
+	afx_msg void OnNMCustomdrawList(NMHDR* pNMHDR, LRESULT* pResult);
 	afx_msg void OnMouseMove(UINT nFlags, CPoint point);
 protected:
 	DECLARE_MESSAGE_MAP();
 	virtual void OnCancel();
 private:
 	CTreeCtrl tree;
-	CParamList list;	
+	CParamList list;
+	HGDIOBJ m_oldObj;
+	CFont f_tree;
+	CFont f_list;
+	CFont f_list_param;
 
 	void InitTree();
+	void addBranch_CHPA(HTREEITEM it); //МЕНЮ Выбора параметров ЛИР541 CHPA
 };
 
 

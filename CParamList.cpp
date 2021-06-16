@@ -6,7 +6,7 @@ void CParamList::CreateHead(Column obj0,...)
 	Column* pp = &obj0;
 	cnt_clm = 0;
 	while (pp->Colname != nullptr) {
-		InsertColumn(cnt_clm, pp->Colname, LVCFMT_LEFT, pp->sz);
+		InsertColumn(cnt_clm, pp->Colname, LVCFMT_CENTER , pp->sz);
 		pp++;
 		cnt_clm++;
 	}
@@ -51,7 +51,7 @@ void CParamList::Disable()
 void CParamList::init_PA()
 {
 	Enable();
-	CreateHead(Column(L"œ”À‹“ - Œ—‹", 100), Column(L"", 100),nullptr);
+	CreateHead(Column(L"       œ”À‹“", 100), Column(L"Œ—‹", 100),nullptr);
 	InsertItems(_T("        P2.0"), _T("        P2.1"), _T("        P2.2"), _T("        P2.3"), _T("        P2"),nullptr);
 	upd_PA();
 }
@@ -121,17 +121,28 @@ int CParamList::incdec_axis(const char dir, signed char axis)
 void CParamList::init_DA()
 {
 	Enable();
-	CreateHead(Column(L"—“–Œ ¿ »Õƒ» ¿÷»»", 130),nullptr);
+	CreateHead(Column(L"—“–Œ ¿ »Õƒ» ¿÷»»", 130), Column(L"", 90), Column(L"", 90),nullptr);
 	InsertItems(_T("              1"), _T("              2"), _T("              3"), _T("              4"), nullptr);
 	upd_DA();
 }
 
 void CParamList::click_DA()
 {
+
 }
 
 void CParamList::upd_DA()
 {
+	SetItemText(0, 1, data.sAxis_screen[data.Str[0]]);
+	SetItemText(1, 1, data.sAxis_screen[data.Str[1]]);
+	SetItemText(2, 1, data.sAxis_screen[data.Str[2]]);
+	SetItemText(3, 1, data.sAxis_screen[data.Str[3]]);
+
+	SetItemText(0, 2, data.sPosition_to_see[data.position_to_see[0]]);
+	SetItemText(1, 2, data.sPosition_to_see[data.position_to_see[1]]);
+	SetItemText(2, 2, data.sPosition_to_see[data.position_to_see[2]]);
+	SetItemText(3, 2, data.sPosition_to_see[data.position_to_see[3]]);
+
 }
 
 

@@ -5,7 +5,7 @@
 #include "CEeprom.h"
 
 class CParamList : public CListCtrl {
-private:
+public:
 	class Column{
 	public:
 		Column(LPCTSTR Colname_, int sz_) {
