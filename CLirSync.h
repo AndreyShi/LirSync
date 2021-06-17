@@ -47,6 +47,7 @@ public:
 	CEditorWnd(int res_id,CWnd* parent, LPCTSTR WndName);
 	~CEditorWnd();
 
+	afx_msg void OnMouseHover(UINT uint, CPoint cpoint);
 	afx_msg void OnClickedOpen();	
 	afx_msg void OnClickedTree(NMHDR* pNMHDR, LRESULT* pResult);
 	afx_msg void OnClickingTree(NMHDR* pNMHDR, LRESULT* pResult);

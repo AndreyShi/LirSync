@@ -69,6 +69,7 @@ void CMainWnd::OnMenuClickedEditor()
 BEGIN_MESSAGE_MAP(CEditorWnd, CDialog)
 	ON_WM_MOUSEMOVE()
 	ON_WM_TIMER()
+	ON_WM_MOUSEHOVER()
 	ON_BN_CLICKED(IDC_Btn_Editor_Open, &CEditorWnd::OnClickedOpen)
 	ON_NOTIFY(TVN_SELCHANGED, IDC_TREE_param, &CEditorWnd::OnClickedTree)
 	ON_NOTIFY(TVN_ITEMEXPANDED, IDC_TREE_param, &CEditorWnd::OnClickedTree)
@@ -112,11 +113,23 @@ CEditorWnd::CEditorWnd(int res_id,CWnd* parent, LPCTSTR WndName)
 	lf.lfWeight = FW_NORMAL; 
 	f_tree.CreateFontIndirectW(&lf);
 	tree.SetFont(&f_tree, true);
+
+	TRACKMOUSEEVENT tme = { 0 };
+	tme.cbSize = sizeof(tme);
+	tme.dwFlags = TME_HOVER;
+	tme.hwndTrack = this->GetSafeHwnd();
+	tme.dwHoverTime = 1000;  // HOVER_DEFAULT, or the hover timeout in milliseconds.
+	::TrackMouseEvent(&tme);
 }
 
 CEditorWnd::~CEditorWnd()
 {
 	
+}
+
+void CEditorWnd::OnMouseHover(UINT uint, CPoint cpoint)
+{
+	AfxMessageBox(L" ");  //state 98 - раскрыли меню
 }
 
 void CEditorWnd::OnClickedOpen()
