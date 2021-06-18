@@ -67,6 +67,8 @@ void CMainWnd::OnMenuClickedEditor()
 
 //========================================================CEditorWnd=========================================================
 BEGIN_MESSAGE_MAP(CEditorWnd, CDialog)
+	ON_WM_SIZING()
+	ON_WM_SIZE()
 	ON_WM_MOUSEMOVE()
 	ON_WM_TIMER()
 	ON_WM_MOUSEHOVER()
@@ -114,12 +116,25 @@ CEditorWnd::CEditorWnd(int res_id,CWnd* parent, LPCTSTR WndName)
 	f_tree.CreateFontIndirectW(&lf);
 	tree.SetFont(&f_tree, true);
 
-	TRACKMOUSEEVENT tme = { 0 };
-	tme.cbSize = sizeof(tme);
-	tme.dwFlags = TME_HOVER;
-	tme.hwndTrack = this->GetSafeHwnd();
-	tme.dwHoverTime = 1000;  // HOVER_DEFAULT, or the hover timeout in milliseconds.
-	::TrackMouseEvent(&tme);
+	RECT t_r;
+	memset(&t_r, 0, sizeof(t_r));
+	if (GetSafeHwnd() == NULL)
+		return;
+	GetWindowRect(&t_r);
+
+	l_w = t_r.right - t_r.left;
+	h_w = t_r.bottom - t_r.top;
+	l_m = l_w;
+	h_m = h_w;
+
+	r_p.left = 11;
+	r_p.top = 11;
+	r_p.right = 310;
+	r_p.bottom = 226;
+
+	l_t = r_p.right - r_p.left;
+	h_t = r_p.bottom - r_p.top;
+
 }
 
 CEditorWnd::~CEditorWnd()
@@ -232,6 +247,74 @@ void CEditorWnd::OnMouseMove(UINT nFlags, CPoint point)
 			list.SetFocus();
 		}		
 	}
+}
+
+void CEditorWnd::OnSize(UINT uint, int ix, int iy)
+{
+	//AfxMessageBox(L"OnSize");
+	RECT t_r;
+	memset(&t_r, 0, sizeof(t_r));
+	if (tree.GetSafeHwnd() == NULL)
+		return;
+	tree.GetWindowRect(&t_r);
+	//t_r.right += 30;
+	//t_r.bottom += 30;
+	//tree.MoveWindow(&t_r,1); 
+	//tree.SetWindowPos();
+}
+
+void CEditorWnd::OnSizing(UINT uint, LPRECT rect)
+{
+	RECT r_p;
+	long l; // длина
+	long h; // высота
+	long l_t_;
+	long h_t_;
+	
+
+	if (tree.GetSafeHwnd() == NULL)
+		return;
+	tree.GetWindowRect(&r_p);
+
+	l = rect->right - rect->left;
+	h = rect->bottom - rect->top;
+
+	l_t_ = r_p.right - r_p.left;
+	h_t_ = r_p.bottom - r_p.top;
+
+	if (l < 687) {
+
+	}
+
+	if (l_t_ >= 299) {
+		l_t_ += l - l_m;
+		if (l_t_ < 299)
+			l_t_ = 299;
+	}
+
+
+
+	/*if (l > l_w) {
+		if (l > l_m)
+			l_t += l - l_m;//r_p.right++;
+		else
+			l_t -= l_m - l;//r_p.right--;
+	}
+	if (h > h_w) {
+		if(h > h_m)
+			h_t += h - h_m;//r_p.right++;
+		else
+			h_t -= h_m - h;//r_p.right--;
+	}  */
+
+	//tree.MoveWindow(&r_p,TRUE);
+	//if(l > l_w || h > h_w)
+		tree.MoveWindow(11, 11, l_t_, h_t, TRUE);
+	//else
+		//tree.MoveWindow(11, 11, 310 - 11, 226 - 11, TRUE);
+
+	l_m = l;
+	h_m = h;	
 }
 
 void CEditorWnd::OnCancel()

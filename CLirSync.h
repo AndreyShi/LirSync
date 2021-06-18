@@ -54,6 +54,8 @@ public:
 	afx_msg void OnClickedList(NMHDR* pNMHDR, LRESULT* pResult);
 	afx_msg void OnNMCustomdrawList(NMHDR* pNMHDR, LRESULT* pResult);
 	afx_msg void OnMouseMove(UINT nFlags, CPoint point);
+	afx_msg void OnSize(UINT, int, int);
+	afx_msg void OnSizing(UINT, LPRECT);
 protected:
 	DECLARE_MESSAGE_MAP();
 	virtual void OnCancel();
@@ -64,7 +66,14 @@ private:
 	CFont f_tree;
 	CFont f_list;
 	CFont f_list_param;
-
+	long l_w; //длина окна
+	long h_w; //высота окна
+	long l_m; // длина
+	long h_m; // высота
+	RECT r_p; //координаты положения дерева
+	long l_t; //длина дерева
+	long h_t; //высота дерева
+	
 	void InitTree();
 	void addBranch_CHPA(HTREEITEM it); //МЕНЮ Выбора параметров ЛИР541 CHPA
 };
