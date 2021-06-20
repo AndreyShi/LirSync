@@ -56,12 +56,14 @@ public:
 	afx_msg void OnMouseMove(UINT nFlags, CPoint point);
 	afx_msg void OnSize(UINT, int, int);
 	afx_msg void OnSizing(UINT, LPRECT);
+	afx_msg void OnGetMinMaxInfo(MINMAXINFO*p);
 protected:
 	DECLARE_MESSAGE_MAP();
 	virtual void OnCancel();
 private:
 	CTreeCtrl tree;
 	CParamList list;
+	CButton btn_open;
 	HGDIOBJ m_oldObj;
 	CFont f_tree;
 	CFont f_list;

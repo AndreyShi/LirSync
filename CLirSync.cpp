@@ -67,6 +67,7 @@ void CMainWnd::OnMenuClickedEditor()
 
 //========================================================CEditorWnd=========================================================
 BEGIN_MESSAGE_MAP(CEditorWnd, CDialog)
+	ON_WM_GETMINMAXINFO()
 	ON_WM_SIZING()
 	ON_WM_SIZE()
 	ON_WM_MOUSEMOVE()
@@ -89,6 +90,7 @@ CEditorWnd::CEditorWnd(int res_id,CWnd* parent, LPCTSTR WndName)
 		this->SetWindowTextW(WndName);
 	tree.Attach(this->GetDlgItem(IDC_TREE_param)->GetSafeHwnd());
 	list.Attach(this->GetDlgItem(IDC_LIST_param)->GetSafeHwnd());
+	btn_open.Attach(this->GetDlgItem(IDC_Btn_Editor_Open)->GetSafeHwnd());
 	InitTree();	
 	list.Disable();
 
@@ -265,7 +267,7 @@ void CEditorWnd::OnSize(UINT uint, int ix, int iy)
 
 void CEditorWnd::OnSizing(UINT uint, LPRECT rect)
 {
-	RECT r_p;
+	CRect r_p;
 	long l; // длина
 	long h; // высота
 	long l_t_;
@@ -279,42 +281,56 @@ void CEditorWnd::OnSizing(UINT uint, LPRECT rect)
 	l = rect->right - rect->left;
 	h = rect->bottom - rect->top;
 
-	l_t_ = r_p.right - r_p.left;
-	h_t_ = r_p.bottom - r_p.top;
+	l_t_ = r_p.Width();
+	h_t_ = r_p.Height();
 
-	if (l < 687) {
+	long delta = l - l_m;
 
-	}
-
-	if (l_t_ >= 299) {
-		l_t_ += l - l_m;
+	if (l_t_ >= 299 && l_t_ <= 350) {
+		l_t_ += delta;
+		if (l_t_ > 350)
+			l_t_ = 350;
 		if (l_t_ < 299)
 			l_t_ = 299;
 	}
 
-
-
-	/*if (l > l_w) {
-		if (l > l_m)
-			l_t += l - l_m;//r_p.right++;
-		else
-			l_t -= l_m - l;//r_p.right--;
+	if (h_t_ >= 215 ) {
+		h_t_ += h - h_m;
 	}
-	if (h > h_w) {
-		if(h > h_m)
-			h_t += h - h_m;//r_p.right++;
-		else
-			h_t -= h_m - h;//r_p.right--;
-	}  */
 
-	//tree.MoveWindow(&r_p,TRUE);
-	//if(l > l_w || h > h_w)
-		tree.MoveWindow(11, 11, l_t_, h_t, TRUE);
-	//else
-		//tree.MoveWindow(11, 11, 310 - 11, 226 - 11, TRUE);
+	tree.MoveWindow(11, 11, l_t_, h_t_, TRUE);
+
+		
+
+	if (btn_open.GetSafeHwnd() == NULL)
+		return;
+
+	btn_open.GetWindowRect(&r_p);
+	static long y_btn = 325;
+	y_btn += h - h_m;
+	btn_open.MoveWindow(11, y_btn, r_p.Width(), r_p.Height(), TRUE);
+
+
+	if (list.GetSafeHwnd() == NULL)
+		return;
+	list.GetWindowRect(&r_p);
+	static long x_list = 342;
+	//if(l_t_ < 350 )
+	x_list += l - l_m;
+	list.MoveWindow(x_list, 11, r_p.Width(), r_p.Height() + (h - h_m), TRUE);
+
 
 	l_m = l;
-	h_m = h;	
+	h_m = h;
+}
+
+void CEditorWnd::OnGetMinMaxInfo(MINMAXINFO* p)
+{
+	p->ptMinTrackSize.x = 687;
+	p->ptMinTrackSize.y = 398;
+
+	//p->ptMaxTrackSize.x = 887;
+	//p->ptMaxTrackSize.y = 598;
 }
 
 void CEditorWnd::OnCancel()
