@@ -97,9 +97,10 @@ CEditorWnd::CEditorWnd(int res_id,CWnd* parent, LPCTSTR WndName)
 	LOGFONT lf;
 
 	memset(&lf, 0, sizeof(LOGFONT));
-	lf.lfHeight = -11;
+	lf.lfHeight = 14;
 	wcscpy_s(lf.lfFaceName, 32, _T("Verdana"));
-	lf.lfWeight = FW_BOLD;
+	lf.lfWeight = FW_MEDIUM;
+	
 	f_list.CreateFontIndirectW(&lf);
 	list.SetFont(&f_list, true);
 
@@ -108,11 +109,12 @@ CEditorWnd::CEditorWnd(int res_id,CWnd* parent, LPCTSTR WndName)
 	lf.lfHeight = -12;
 	wcscpy_s(lf.lfFaceName, 28, _T("Verdana"));
 	lf.lfWeight = FW_NORMAL;
+	lf.lfItalic = TRUE;
 	f_list_param.CreateFontIndirectW(&lf);
 
 
 	memset(&lf, 0, sizeof(LOGFONT));
-	lf.lfHeight = -10;
+	lf.lfHeight = -12;
 	wcscpy_s(lf.lfFaceName, 32, _T("Verdana"));
 	lf.lfWeight = FW_NORMAL; 
 	f_tree.CreateFontIndirectW(&lf);
@@ -171,12 +173,11 @@ void CEditorWnd::OnClickedTree(NMHDR* pNMHDR, LRESULT* pResult)
 	else if(str == L"Оси - экран")
 		list.init_DA();
 	else if (str == L"Параметры осей") {
-		AfxMessageBox(str);  //state 98 - раскрыли меню
+		;// AfxMessageBox(str);  //state 98 - раскрыли меню
 	}
 	else if (str == L"Отображение") {
-		HTREEITEM root = tree.GetParentItem(pNMA->itemNew.hItem);
-		CString str = tree.GetItemText(root);  //получаем номер канала
-		AfxMessageBox(str);
+		init_ch(pNMA->itemNew.hItem);
+		list.init_PR();
 	}
 	
 	*pResult = 0;
@@ -246,13 +247,14 @@ void CEditorWnd::OnMouseMove(UINT nFlags, CPoint point)
 	CWnd* wn = GetFocus();
 	if (wn != &list) {
 		if (list.IsWindowEnabled()) {
-			list.SetFocus();
+			;// list.SetFocus();
 		}		
 	}
 }
 
 void CEditorWnd::OnSize(UINT uint, int ix, int iy)
 {
+	return;
 	//AfxMessageBox(L"OnSize");
 	RECT t_r;
 	memset(&t_r, 0, sizeof(t_r));
@@ -267,6 +269,7 @@ void CEditorWnd::OnSize(UINT uint, int ix, int iy)
 
 void CEditorWnd::OnSizing(UINT uint, LPRECT rect)
 {
+	return;
 	CRect r_p;
 	long l; // длина
 	long h; // высота
@@ -340,11 +343,32 @@ void CEditorWnd::OnCancel()
 	this->DestroyWindow();
 }
 
+void CEditorWnd::init_ch(HTREEITEM it)
+{
+	HTREEITEM root = tree.GetParentItem(it);
+	CString tmp;
+	tmp = tree.GetItemText(root);  //получаем номер канала
+	tmp = tmp.Right(1);
+	list.ch = _ttoi(tmp);
+	//AfxMessageBox(s_ch);
+}
+
 void CEditorWnd::InitTree()
 {	
 	HTREEITEM  it1 = tree.InsertItem(L"Общие параметры");		// структура элемента дерево
-	tree.InsertItem(L"Оси - Измерительные каналы", it1);			// добавить элемент	
-	tree.InsertItem(L"Оси - экран", it1);			// добавить элемент	
+	tree.InsertItem(L"Оси - Измерительные каналы", it1);			
+	tree.InsertItem(L"Оси - экран", it1);			
+	HTREEITEM  it1_sub = tree.InsertItem(L"Конфигурация входов", it1);
+		tree.InsertItem(L"Общие функции", it1_sub);
+		tree.InsertItem(L"Шпиндель", it1_sub);
+		tree.InsertItem(L"М-функции входов", it1_sub);
+
+	it1_sub = tree.InsertItem(L"Конфигурация выходов", it1);
+		tree.InsertItem(L"Общие функции", it1_sub);
+		tree.InsertItem(L"Шпиндель", it1_sub);
+		tree.InsertItem(L"М-функции выходов", it1_sub);
+
+	tree.InsertItem(L"Вне допуска", it1);
 	HTREEITEM it2 = tree.InsertItem(L"Параметры осей");		// структура элемента дерево	
 	HTREEITEM it2_sub;
 	it2_sub = tree.InsertItem(L"Канал P2.0", it2);
@@ -355,9 +379,11 @@ void CEditorWnd::InitTree()
 	addBranch_CHPA(it2_sub);
 	it2_sub = tree.InsertItem(L"Канал P2.3", it2);
 	addBranch_CHPA(it2_sub);
-	it2_sub = tree.InsertItem(L"Канал P2", it2);
+	it2_sub = tree.InsertItem(L"Канал P2  ", it2);
 	addBranch_CHPA(it2_sub);
-	HTREEITEM  it3 = tree.InsertItem(L"Смещения координат");	// структура элемента дерево
+	tree.InsertItem(L"Смещения координат");	// структура элемента дерево
+	tree.InsertItem(L"Таблица инструментов");	// структура элемента дерево
+	tree.InsertItem(L"Настройки");	// структура элемента дерево
 	
 	
 }

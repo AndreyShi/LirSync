@@ -68,6 +68,9 @@ private:
 	CFont f_tree;
 	CFont f_list;
 	CFont f_list_param;
+
+	void init_ch(HTREEITEM it);
+
 	long l_w; //длина окна
 	long h_w; //высота окна
 	long l_m; // длина

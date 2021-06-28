@@ -18,6 +18,7 @@ public:
 	int cnt_clm; //текущее кол во колонок
 public:
 	CEeprom data;
+	int ch;
 
 	void CreateHead(Column obj,...);
 	void InsertItems(LPCTSTR item0, ...);
@@ -38,5 +39,11 @@ public:
 	void init_DA();
 	void click_DA();
 	void upd_DA();
+	//
+
+	//ПАРАМЕТРЫ ОСИ
+	void init_PR();
+	void click_PR();
+	void upd_PR();
 	//
 };

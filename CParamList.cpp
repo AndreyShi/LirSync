@@ -1,5 +1,6 @@
 #include "CParamList.h"
 
+
 void CParamList::CreateHead(Column obj0,...)
 {
 	SetExtendedStyle(LVS_EX_GRIDLINES);
@@ -58,6 +59,7 @@ void CParamList::init_PA()
 
 void CParamList::click_PA(int str)
 {
+	return;
 	if (str >= 0 && str < N_AXIS + N_SA) {
 		change_axis_name(str);
 		//UpdateTypeAxis(str);
@@ -121,7 +123,7 @@ int CParamList::incdec_axis(const char dir, signed char axis)
 void CParamList::init_DA()
 {
 	Enable();
-	CreateHead(Column(L"ÑÒĞÎÊÀ ÈÍÄÈÊÀÖÈÈ", 130), Column(L"", 90), Column(L"", 90),nullptr);
+	CreateHead(Column(L"ÑÒĞÎÊÀ ÈÍÄÈÊÀÖÈÈ", 145), Column(L"", 90), Column(L"", 90),nullptr);
 	InsertItems(_T("              1"), _T("              2"), _T("              3"), _T("              4"), nullptr);
 	upd_DA();
 }
@@ -143,6 +145,28 @@ void CParamList::upd_DA()
 	SetItemText(2, 2, data.sPosition_to_see[data.position_to_see[2]]);
 	SetItemText(3, 2, data.sPosition_to_see[data.position_to_see[3]]);
 
+}
+
+void CParamList::init_PR()
+{
+	Enable();
+	CString head;
+	wchar_t axis = data.sAxis_screen[data.P2[ch]][2];
+	head.Format(L"ÏÀĞÀÌÅÒĞÛ ÎÑÈ %c P2.%d", axis, ch);
+	CreateHead(Column(head, 190), Column(L"", 150),nullptr);
+	InsertItems(_T("Ôîğìàò"), _T("Òîêàğíûé ğåæèì"), _T("Íàïğàâëåíèå"), _T("Êîıôôèöèåíò"),
+		_T("Ëşôò"), _T("Êîíòğîëü äàò÷èêà"), _T("Ñîõğàíåíèå ñ÷åò÷èêîâ"), _T("Îòîáğàæåíèå ñêîğîñòè"),
+		_T("Çîíà ğåôåğåíòíîé ìåòêè"), _T("Âíåøíåå îáíóëåíèå"), _T("Èíòåğâàë èçìåğ.ñêîğîñòè"),
+		_T("Êîğğåêöèÿ"), _T("Êîäèğîâàííûå ìåòêè"), nullptr);
+	upd_PR();
+}
+
+void CParamList::click_PR()
+{
+}
+
+void CParamList::upd_PR()
+{
 }
 
 
