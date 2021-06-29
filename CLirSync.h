@@ -70,6 +70,7 @@ private:
 	CFont f_list_param;
 
 	void init_ch(HTREEITEM it);
+	bool IO_MainF(HTREEITEM it);
 
 	long l_w; //длина окна
 	long h_w; //высота окна

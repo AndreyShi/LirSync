@@ -13,6 +13,16 @@
 
 #define MAX_INSTR 10  //кол -во инструмента
 
+#define YESNO_P_bm   0x80 // 1 - нет  ,0 - есть 
+#define INVERSE_P_bm 0x40 // 1 - нет инверсии  ,0 - есть инверсия
+#define P_OR_m_bm    0x20 // 1 - Пульт ,0 - Контроллер
+#define DATA_P_bm    0x1F // максимальный номер в параметре 31 (32)
+#define IN_P  1
+#define OUT_P 0
+#define NO_P 2
+#define LV_P 3
+#define HV_P 4
+
 
 class CEeprom {
 private:

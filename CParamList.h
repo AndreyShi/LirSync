@@ -3,6 +3,7 @@
 #include "afxwin.h" // MFC нЯМНБМШЕ Х ЯРЮМДЮПРМШЕ ЙНЛОНМЕМРШ
 #include "afxcmn.h"
 #include "CEeprom.h"
+#include <string.h>
 
 class CParamList : public CListCtrl {
 public:
@@ -22,6 +23,7 @@ public:
 
 	void CreateHead(Column obj,...);
 	void InsertItems(LPCTSTR item0, ...);
+	void show_P(char P, char type, int x, int y, char align);
 
 	void Enable();
 	void Clear();
@@ -45,5 +47,36 @@ public:
 	void init_PR();
 	void click_PR();
 	void upd_PR();
+	//
+
+	//лемч "наыхе тсмйжхх бунднб FINGE"
+	void init_FINGE();
+	void upd_FINGE();
+	//
+
+	//лемч "бундш сопюбкемхъ ьохмдекел SINGE"
+	void init_SINGE();
+	void upd_SINGE();
+	//
+
+	//лемч "M-тсмйжхх бунднб MINGE"
+	void init_MINGE();
+	void upd_MINGE();
+	//
+
+	//лемч "наыхе тсмйжхх бшунднб FOUTGE"
+	void init_FOUTGE();
+	//
+
+	//лемч "бшундш сопюбкемхъ ьохмдекел SOUTGE"
+	void init_SOUTGE();
+	//
+
+	//лемч "M-тсмйжхх бшунднб MOUTGE"
+	void init_MOUTGE();
+	//
+
+	//лемч "бме дносяйю VNEDK"
+	void init_VNEDK();
 	//
 };

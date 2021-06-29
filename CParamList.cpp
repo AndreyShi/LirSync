@@ -23,6 +23,55 @@ void CParamList::InsertItems(LPCTSTR item0, ...)
 		cnt++;
 	}
 }
+/*
+P - байт, состоит из :
+Yes/No       Inv      P_or_m    Num
+0(0x80)      0(0x40)  0(0x20)   макс 31(0x1F)
+*/
+void CParamList::show_P(char P, char type, int x, int y, char align)
+{
+	if (P & YESNO_P_bm) {
+		if (align) {
+			SetItemText(y, x, L"нет");
+		}
+		else {
+			SetItemText(y, x, L"нет");
+		}
+	}
+	else {
+		wchar_t str[8] = { 0 };
+		int ptr = 0;
+		if (type == IN_P)
+			str[ptr++] = L'<'; //'>'
+		else if (type == OUT_P)
+			str[ptr++] = L'>'; //'<'
+
+		long data = P & DATA_P_bm;
+		if (P & P_OR_m_bm) {
+			data++;
+			str[ptr++] = L'P';
+			str[ptr++] = L'1';
+			str[ptr++] = L'.';
+		}
+		else {
+			str[ptr++] = L'm';
+			if (type == IN_P)
+				data += 32;
+		}
+
+		_itow_s(data, str + ptr, (sizeof(str)/2) - ptr, 10);
+
+		if (!(P & INVERSE_P_bm))
+			 wcscat_s(str, sizeof(str) / 2, L"!");// display.strncatsym_lir(str, sizeof(str), '!');
+
+		if (align) {
+			SetItemText(y, x, str);
+		}
+		else {
+			SetItemText(y, x, str);
+		}
+	}
+}
 
 void CParamList::Enable()
 {
@@ -167,6 +216,91 @@ void CParamList::click_PR()
 
 void CParamList::upd_PR()
 {
+}
+
+void CParamList::init_FINGE()
+{
+	Enable();
+	CreateHead(Column(L"ОБЩИЕ ФУНКЦИИ ВХОДОВ", 190), Column(L"", 70), nullptr);
+	InsertItems(_T("Готовность станка"), _T("Ускоренный ход G0"), _T("Стоп подача"), _T("Смена кадра"),
+		_T("Пауза"), _T("Старт программы"), _T("Внешний пульт"), nullptr);
+	upd_FINGE();
+}
+
+void CParamList::upd_FINGE()
+{
+	char* p = &data._INGen.gotov_stanok;
+	for (int y = 0; y < 7; y++) {
+		show_P(*p, IN_P, 1, y, 0);
+		p++;
+	}
+}
+
+void CParamList::init_SINGE()
+{
+	Enable();
+	CreateHead(Column(L"ВХОДЫ УПРАВЛЕНИЯ ШПИНДЕЛЕМ", 240), Column(L"", 70), nullptr);
+	InsertItems(_T("По часовой М3"), _T("Против часовой М4"), _T("Стоп М5"), _T("Толчок+"),
+		_T("Толчок-"), _T("Шпиндель вращается"), _T("Инструмент зажат"), nullptr);
+	upd_SINGE();
+}
+
+void CParamList::upd_SINGE()
+{
+	char* p = &data._INGen.po_chasovoy_M3;
+	for (int y = 0; y < 8; y++) {
+		show_P(*p, IN_P, 1, y, 0);
+		p++;
+	}
+}
+
+void CParamList::init_MINGE()
+{
+	Enable();
+	CreateHead(Column(L"М-ФУНКЦИИ ВХОДОВ", 190), Column(L"", 70), nullptr);
+	InsertItems(_T("М102"), _T("М112"), _T("М122"), _T("М132"),
+		_T("М142"), _T("М152"), _T("М162"), _T("М172"), nullptr);
+	upd_MINGE();
+}
+
+void CParamList::upd_MINGE()
+{
+	char* p = &data._INGen2.M102;
+	for (int y = 0; y < 8; y++) {
+		show_P(*p, IN_P, 1, y, 0);
+		p++;
+	}
+}
+
+void CParamList::init_FOUTGE()
+{
+	Enable();
+	CreateHead(Column(L"ОБЩИЕ ФУНКЦИИ ВЫХОДОВ", 200), Column(L"", 70), nullptr);
+	InsertItems(_T("Ускоренный ход G0"), _T("Подача G1"), _T("Технол. останов M0"), _T("Конец программы M2"),
+		_T("Ручной режим"), _T("Автоматический режим"), _T("Позиционирование"), _T("Готовность УЦИПУ"), nullptr);
+}
+
+void CParamList::init_SOUTGE()
+{
+	Enable();
+	CreateHead(Column(L"ВЫХОДЫ УПРАВЛЕНИЯ ШПИНДЕЛЕМ", 250), Column(L"", 70), nullptr);
+	InsertItems(_T("По часовой М3"), _T("Против часовой М4"), _T("Стоп М5"), _T("Толчок"),
+		_T("М3,М4 через М5"), _T("Время для М5, сек"),nullptr);
+}
+
+void CParamList::init_MOUTGE()
+{
+	Enable();
+	CreateHead(Column(L"М-ФУНКЦИИ ВЫХОДОВ", 190), Column(L"", 70), nullptr);
+	InsertItems(_T("М100-выкл М101-вкл"), _T("М110-выкл М111-вкл"), _T("М120-выкл М121-вкл"), _T("М130-выкл М131-вкл"),
+		_T("М140-выкл М141-вкл"), _T("М150-выкл М151-вкл"), _T("М160-выкл М161-вкл"), _T("М170-выкл М171-вкл"), nullptr);
+}
+
+void CParamList::init_VNEDK()
+{
+	Enable();
+	CreateHead(Column(L"", 120), Column(L"", 70), nullptr);
+	InsertItems(_T("Вне допуска"), nullptr);
 }
 
 

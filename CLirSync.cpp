@@ -75,7 +75,7 @@ BEGIN_MESSAGE_MAP(CEditorWnd, CDialog)
 	ON_WM_MOUSEHOVER()
 	ON_BN_CLICKED(IDC_Btn_Editor_Open, &CEditorWnd::OnClickedOpen)
 	ON_NOTIFY(TVN_SELCHANGED, IDC_TREE_param, &CEditorWnd::OnClickedTree)
-	ON_NOTIFY(TVN_ITEMEXPANDED, IDC_TREE_param, &CEditorWnd::OnClickedTree)
+	//ON_NOTIFY(TVN_ITEMEXPANDED, IDC_TREE_param, &CEditorWnd::OnClickedTree)
 	ON_NOTIFY(TVN_SELCHANGING,IDC_TREE_param, &CEditorWnd::OnClickingTree)
 	ON_NOTIFY(NM_CLICK, IDC_LIST_param, &CEditorWnd::OnClickedList)
 	ON_NOTIFY(NM_DBLCLK, IDC_LIST_param, &CEditorWnd::OnClickedList)
@@ -168,16 +168,39 @@ void CEditorWnd::OnClickedTree(NMHDR* pNMHDR, LRESULT* pResult)
 	LPNMTREEVIEWW pNMA = (LPNMTREEVIEWW)pNMHDR;
 	CString str = tree.GetItemText(pNMA->itemNew.hItem);
 
-	if (str == L"Оси - Измерительные каналы")
-		list.init_PA();					
-	else if(str == L"Оси - экран")
+	if (str == L"Оси - Измерительные каналы") {
+		list.init_PA();
+	}		
+	else if (str == L"Оси - экран") {
 		list.init_DA();
+	}		
 	else if (str == L"Параметры осей") {
 		;// AfxMessageBox(str);  //state 98 - раскрыли меню
 	}
 	else if (str == L"Отображение") {
 		init_ch(pNMA->itemNew.hItem);
 		list.init_PR();
+	}
+	else if (str == L"Общие функции") {
+		if (IO_MainF(pNMA->itemNew.hItem))
+			list.init_FINGE();
+		else
+			list.init_FOUTGE();
+	}
+	else if (str == L"Шпиндель") {
+		if (IO_MainF(pNMA->itemNew.hItem))
+			list.init_SINGE();
+		else
+			list.init_SOUTGE();
+	}
+	else if (str == L"М-функции входов"){
+		list.init_MINGE();
+	}		
+	else if (str == L"М-функции выходов") {
+		list.init_MOUTGE();
+	}		
+	else if (str == L"Вне допуска") {
+		list.init_VNEDK();
 	}
 	
 	*pResult = 0;
@@ -342,15 +365,28 @@ void CEditorWnd::OnCancel()
 	tree.Detach();
 	this->DestroyWindow();
 }
-
+/*
+* функция определяет текущий номер канала
+*/
 void CEditorWnd::init_ch(HTREEITEM it)
 {
 	HTREEITEM root = tree.GetParentItem(it);
-	CString tmp;
-	tmp = tree.GetItemText(root);  //получаем номер канала
+	CString tmp = tree.GetItemText(root);  
 	tmp = tmp.Right(1);
-	list.ch = _ttoi(tmp);
-	//AfxMessageBox(s_ch);
+	list.ch = _ttoi(tmp);//получаем номер канала
+}
+/*
+* функция определяет родительское меню входы или выходы
+*/
+bool CEditorWnd::IO_MainF(HTREEITEM it)
+{
+	HTREEITEM root = tree.GetParentItem(it);
+	CString tmp = tree.GetItemText(root);
+	if (tmp == L"Конфигурация входов")
+		return true;
+	else if (tmp == L"Конфигурация выходов")
+		return false;
+	return false;//если что пойдет не так будет как выходы)
 }
 
 void CEditorWnd::InitTree()
